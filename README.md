@@ -1,7 +1,7 @@
 # Teman Sejenak
 Untuk memenuhi tugas pada mata kuliah Mobile Programming I, Sistem Informasi, Universitas Bina Sarana Informatika
 =======
-# flutter_ins
+# Teman Sejenak
 
 A new Flutter project.
 
