@@ -1,5 +1,5 @@
 # Teman Sejenak
-Untuk memenuhi tugas pada mata kuliah Mobile Programming I, Sistem Informasi, Universitas Bina Sarana Informatika
+Untuk memenuhi tugas Kelompok 1 pada mata kuliah Mobile Programming I, Semester 4, Sistem Informasi, Universitas Bina Sarana Informatika.
 =======
 # Teman Sejenak
 
