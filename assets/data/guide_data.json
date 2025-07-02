@@ -1,0 +1,59 @@
+[
+  {
+    "name": "Clarissa Aurel",
+    "gender": "Female",
+    "age": 24,
+    "location": "Depok, Jawa Barat",
+    "languages": ["Indonesia", "English"],
+    "available": ["Morning", "Evening"],
+    "interests": ["Coffee Shop Hopping", "Walking", "Listening to Music"],
+    "imageUrl": "https://picsum.photos/id/64/720/720",
+    "verified": true,
+    "rating": 4.9,
+    "ordersHandled": 72,
+    "gallery": [
+      "https://picsum.photos/600/400?random=1",
+      "https://picsum.photos/600/400?random=2",
+      "https://picsum.photos/600/400?random=3",
+      "https://picsum.photos/600/400?random=4"
+    ]
+  },
+  {
+    "name": "Raka Dirga",
+    "gender": "Male",
+    "age": 27,
+    "location": "Bandung, Jawa Barat",
+    "languages": ["Indonesia", "Sundanese", "English"],
+    "available": ["All Time"],
+    "interests": ["Culinary Tour", "Photography", "Sightseeing"],
+    "imageUrl": "https://picsum.photos/id/91/720/720",
+    "verified": true,
+    "rating": 4.8,
+    "ordersHandled": 59,
+    "gallery": [
+      "https://picsum.photos/600/400?random=5",
+      "https://picsum.photos/600/400?random=6",
+      "https://picsum.photos/600/400?random=7",
+      "https://picsum.photos/600/400?random=8"
+    ]
+  },
+  {
+    "name": "Aurora Lestari",
+    "gender": "Female",
+    "age": 25,
+    "location": "Bogor, Jawa Barat",
+    "languages": ["Indonesia", "English"],
+    "available": ["Afternoon", "Night"],
+    "interests": ["Gardening", "Reading", "Nature Trips"],
+    "imageUrl": "https://picsum.photos/id/65/720/720",
+    "verified": true,
+    "rating": 4.7,
+    "ordersHandled": 48,
+    "gallery": [
+      "https://picsum.photos/600/400?random=9",
+      "https://picsum.photos/600/400?random=10",
+      "https://picsum.photos/600/400?random=11",
+      "https://picsum.photos/600/400?random=12"
+    ]
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Kebun Raya Bogor",
+    "location": "Bogor, Jawa Barat",
+    "imageUrl": "https://picsum.photos/id/1021/900/600",
+    "description": "Kebun botani bersejarah dengan ribuan spesies tanaman dan suasana asri."
+  },
+  {
+    "title": "Taman Mini Indonesia Indah",
+    "location": "Jakarta, Indonesia",
+    "imageUrl": "https://picsum.photos/id/1036/900/600",
+    "description": "Taman budaya dengan paviliun daerah, museum, dan danau miniatur Indonesia."
+  },
+  {
+    "title": "Taman Wisata Alam Mangrove Angke Kapuk",
+    "location": "Jakarta Utara, Indonesia",
+    "imageUrl": "https://picsum.photos/id/1003/900/600",
+    "description": "Hutan mangrove di tengah kota untuk wisata alam dan ekowisata."
+  },
+  {
+    "title": "Tangkuban Perahu",
+    "location": "Bandung, Jawa Barat",
+    "imageUrl": "https://picsum.photos/id/1043/900/600",
+    "description": "Gunung berapi aktif dengan kawah besar yang bisa dikunjungi wisatawan."
+  }
+]

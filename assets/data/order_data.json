@@ -1,0 +1,44 @@
+[
+  {
+    "id": "#ORD001",
+    "guideName": "Clarissa Aurel",
+    "guideImg": "https://picsum.photos/id/64/720/720",
+    "place": "Margonda, Depok",
+    "placeImg": "https://picsum.photos/id/1044/720",
+    "service": "meet",
+    "hours": 3,
+    "price": 150000,
+    "etaMinutes": 45,
+    "status": "approved",
+    "guideLat": -6.3871,
+    "guideLng": 106.8230
+  },
+  {
+    "id": "#ORD002",
+    "guideName": "Raka Dirga",
+    "guideImg": "https://picsum.photos/id/91/720/720",
+    "place": "Dago, Bandung",
+    "placeImg": "https://picsum.photos/id/1053/720",
+    "service": "chat",
+    "hours": 2,
+    "price": 90000,
+    "etaMinutes": 0,
+    "status": "pending",
+    "guideLat": -6.8719,
+    "guideLng": 107.6174
+  },
+  {
+    "id": "#ORD003",
+    "guideName": "Aurora Lestari",
+    "guideImg": "https://picsum.photos/id/65/720/720",
+    "place": "Kebun Raya, Bogor",
+    "placeImg": "https://picsum.photos/id/1065/720",
+    "service": "chat",
+    "hours": 1,
+    "price": 50000,
+    "etaMinutes": 0,
+    "status": "completed",
+    "guideLat": -6.5971,
+    "guideLng": 106.8060
+  }
+]
