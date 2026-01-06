@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/screens/root_navigator.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:teman_sejenak/screens/root_navigator.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 
 import '../models/guide.dart';
 import '../models/destination.dart';
@@ -8,6 +9,7 @@ import '../utils/json_loader.dart';
 import '../widgets/guide_card.dart';
 import 'place_detail_screen.dart';
 import 'guide_detail_screen.dart';
+import '../presentation/providers/providers.dart';
 
 class GuideListScreen extends StatefulWidget {
   const GuideListScreen({super.key});
@@ -30,17 +32,41 @@ class _GuideListScreenState extends State<GuideListScreen> {
   }
 
   Future<void> _initData() async {
-    // load guides
-    final guides = await JsonLoader.loadList<Guide>(
-      'guide_data.json',
-      Guide.fromJson,
-    );
+    // load guides from API via Provider
+    final guideProvider = context.read<GuideProvider>();
+    await guideProvider.loadGuides();
+    
+    // Convert API model to local model for backward compatibility
+    final guides = guideProvider.guides.map((g) => Guide(
+      id: g.id,
+      name: g.name,
+      gender: g.gender,
+      age: g.age,
+      location: g.location,
+      languages: g.languages,
+      available: g.available,
+      interests: g.interests,
+      imageUrl: g.imageUrl,
+      verified: g.verified,
+      rating: g.rating,
+      ordersHandled: g.ordersHandled,
+      gallery: g.gallery,
+      description: g.description,
+    )).toList();
 
-    // load destinations
-    final dests = await JsonLoader.loadList<Destination>(
-      'destination_data.json',
-      Destination.fromJson,
-    );
+    // load destinations from API via Provider
+    final destinationProvider = context.read<DestinationProvider>();
+    await destinationProvider.loadDestinations();
+    
+    // Convert to local model
+    final dests = destinationProvider.destinations.map((d) => Destination(
+      id: d.id,
+      title: d.title,
+      location: d.location,
+      imageUrl: d.imageUrl,
+      description: d.description,
+      distance: d.distance,
+    )).toList();
 
     Destination? near;
     if (dests.isNotEmpty) {

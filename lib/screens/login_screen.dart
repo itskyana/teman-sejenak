@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/screens/root_navigator.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:teman_sejenak/screens/root_navigator.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 import 'register_screen.dart';
+import '../presentation/providers/providers.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _userCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
+  bool _isLoading = false;
 
   InputDecoration _dec(String label) => InputDecoration(
     labelText: label,
@@ -133,20 +136,20 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(14),
                             ),
                           ),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const RootNavigation(),
+                          onPressed: _isLoading ? null : _handleLogin,
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: AppColors.background,
+                                  ),
+                                )
+                              : const Text(
+                                  'Masuk',
+                                  style: TextStyle(color: AppColors.background),
                                 ),
-                              );
-                            }
-                          },
-                          child: const Text(
-                            'Masuk',
-                            style: TextStyle(color: AppColors.background),
-                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -183,5 +186,34 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => _isLoading = true);
+
+    final authProvider = context.read<AuthProvider>();
+    final success = await authProvider.login(
+      email: _userCtrl.text.trim(),
+      password: _passCtrl.text,
+    );
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    if (success) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const RootNavigation()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(authProvider.errorMessage ?? 'Login gagal'),
+          backgroundColor: AppColors.danger,
+        ),
+      );
+    }
   }
 }

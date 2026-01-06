@@ -47,4 +47,5 @@ class AppColors {
   static const Color background = Color(0xFFF5F3FF);     // Latar putih keunguan
   static const Color textDark = Color(0xFF3D2C8D);       // Untuk heading
   static const Color borderSoft = Color(0xFFE0DAFF);     // Border halus
+  static const Color dark = Color(0xFF121212);            // Untuk mode gelap
 }

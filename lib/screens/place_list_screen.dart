@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/screens/place_detail_screen.dart';
+import 'package:teman_sejenak/screens/place_detail_screen.dart';
 import '../models/destination.dart';
 
 class PlaceListScreen extends StatefulWidget {

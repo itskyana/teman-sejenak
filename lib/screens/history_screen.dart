@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 import '../models/order.dart';
 import '../utils/json_loader.dart';
 import 'order_detail_screen.dart';
@@ -34,6 +34,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: _bar(),
+        backgroundColor: AppColors.background,
         body: TabBarView(controller: _tab, children: [
           _list((o) =>
               o.status == OrderStatus.pending ||
@@ -59,6 +60,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             ),
             child: TabBar(
               controller: _tab,
+              dividerColor: Colors.transparent,
               labelColor: AppColors.background,
               unselectedLabelColor: AppColors.gray700,
               indicatorSize: TabBarIndicatorSize.tab,

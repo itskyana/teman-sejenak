@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 
 Future<void> showPaymentSheet(
   BuildContext ctx, {

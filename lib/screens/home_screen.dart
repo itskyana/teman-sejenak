@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/screens/guide_list_screen.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:teman_sejenak/screens/guide_list_screen.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 
 import 'place_detail_screen.dart';
 import 'place_list_screen.dart';
@@ -12,6 +13,7 @@ import '../utils/json_loader.dart';
 import '../widgets/popular_card.dart';
 import '../widgets/nearby_card.dart';
 import '../widgets/guide_card.dart';
+import '../presentation/providers/providers.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,7 +25,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // ── data ──────────────────────────────────────────────────────────
   List<Destination> destinations = [];
+  List<Destination> filteredDestinations = [];
   List<Guide> guides = [];
+
+  // ── filter ───────────────────────────────────────────────────────
+  String? _selectedCategory;
 
   // ── carousel hero ────────────────────────────────────────────────
   final _pageCtrl = PageController(viewportFraction: .9);
@@ -62,12 +68,62 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchData() async {
-    destinations = await JsonLoader.loadList(
-      'destination_data.json',
-      Destination.fromJson,
-    );
-    guides = await JsonLoader.loadList('guide_data.json', Guide.fromJson);
+    // Load destinations from API via Provider
+    final destinationProvider = context.read<DestinationProvider>();
+    await destinationProvider.loadDestinations();
+    await destinationProvider.loadPopular();
+    
+    // Convert API model to local model for backward compatibility
+    destinations = destinationProvider.destinations.map((d) => Destination(
+      id: d.id,
+      title: d.title,
+      type: d.type,
+      location: d.location,
+      imageUrl: d.imageUrl,
+      description: d.description,
+      distance: d.distance,
+    )).toList();
+    
+    // Initialize filtered destinations with all destinations
+    filteredDestinations = List.from(destinations);
+    
+    // Load guides from API via Provider
+    final guideProvider = context.read<GuideProvider>();
+    await guideProvider.loadGuides();
+    
+    // Convert API model to local model for backward compatibility
+    guides = guideProvider.guides.map((g) => Guide(
+      id: g.id,
+      name: g.name,
+      gender: g.gender,
+      age: g.age,
+      location: g.location,
+      languages: g.languages,
+      available: g.available,
+      interests: g.interests,
+      imageUrl: g.imageUrl,
+      verified: g.verified,
+      rating: g.rating,
+      ordersHandled: g.ordersHandled,
+      gallery: g.gallery,
+      description: g.description,
+    )).toList();
+    
     if (mounted) setState(() {});
+  }
+
+  // ── Filter destinations by category ──────────────────────────────
+  void _filterByCategory(String? category) {
+    setState(() {
+      _selectedCategory = category;
+      if (category == null || category.isEmpty) {
+        filteredDestinations = List.from(destinations);
+      } else {
+        filteredDestinations = destinations
+            .where((d) => d.type.toLowerCase() == category.toLowerCase())
+            .toList();
+      }
+    });
   }
 
   // ── UI ───────────────────────────────────────────────────────────
@@ -98,42 +154,66 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 28),
 
             // ── Popular Destination ─────────────────────────────
-            _buildSectionHeader('Tempat yang sedang trending', () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (_) => PlaceListScreen(
-                        title: 'Tempat Trending',
-                        places: destinations,
+            _buildSectionHeader(
+              _selectedCategory != null 
+                  ? 'Tempat $_selectedCategory' 
+                  : 'Tempat yang sedang trending', 
+              () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (_) => PlaceListScreen(
+                          title: _selectedCategory != null 
+                              ? 'Tempat $_selectedCategory' 
+                              : 'Tempat Trending',
+                          places: filteredDestinations,
+                        ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 10),
+            if (filteredDestinations.isEmpty)
+              Container(
+                height: 150,
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.search_off_rounded, size: 48, color: AppColors.gray400),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Tidak ada tempat untuk kategori ini',
+                      style: TextStyle(color: AppColors.gray500),
+                    ),
+                  ],
+                ),
+              )
+            else
+              SizedBox(
+                height: 219,
+                child: ListView.separated(
+                  clipBehavior: Clip.none,
+                  padding: const EdgeInsets.only(bottom: 4),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: filteredDestinations.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 16),
+                  itemBuilder:
+                      (_, i) => PopularCard(
+                        destination: filteredDestinations[i],
+                        onTap:
+                            () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) =>
+                                        PlaceDetailScreen(place: filteredDestinations[i]),
+                              ),
+                            ),
                       ),
                 ),
-              );
-            }),
-            const SizedBox(height: 10),
-            SizedBox(
-              height: 219,
-              child: ListView.separated(
-                clipBehavior: Clip.none,
-                padding: const EdgeInsets.only(bottom: 4),
-                scrollDirection: Axis.horizontal,
-                itemCount: destinations.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
-                itemBuilder:
-                    (_, i) => PopularCard(
-                      destination: destinations[i],
-                      onTap:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (_) =>
-                                      PlaceDetailScreen(place: destinations[i]),
-                            ),
-                          ),
-                    ),
               ),
-            ),
 
             const SizedBox(height: 28),
 
@@ -294,37 +374,54 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
   // ── Header (greeting + avatar) ──────────────────────────────────
-  Widget _buildHeader() => Row(
-    children: const [
-      Expanded(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Hi Lukman,',
-              style: TextStyle(
-                fontSize: 18,
-                color: AppColors.gray900,
-                fontWeight: FontWeight.w500,
-              ),
+  Widget _buildHeader() => Consumer<AuthProvider>(
+    builder: (context, auth, _) {
+      final firstName = auth.userName.split(' ').first;
+      return Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hi $firstName,',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: AppColors.gray900,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Temukan teman sejenakmu',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryDark,
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 4),
-            Text(
-              'Temukan teman sejenakmu',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryDark,
-              ),
-            ),
-          ],
-        ),
-      ),
-      CircleAvatar(
-        radius: 22,
-        backgroundImage: NetworkImage('https://picsum.photos/seed/profile/200'),
-      ),
-    ],
+          ),
+          CircleAvatar(
+            radius: 22,
+            backgroundColor: AppColors.primary.withOpacity(0.1),
+            backgroundImage: auth.user?.imageUrl != null
+                ? NetworkImage(auth.user!.imageUrl!)
+                : null,
+            child: auth.user?.imageUrl == null
+                ? Text(
+                    auth.userInitials,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
+                    ),
+                  )
+                : null,
+          ),
+        ],
+      );
+    },
   );
 
   // ── Search field ────────────────────────────────────────────────
@@ -360,17 +457,17 @@ class _HomeScreenState extends State<HomeScreen> {
   // ── Category chips ──────────────────────────────────────────────
   Widget _buildCategoryRow() {
     final cats = [
-      {'label': 'Taman', 'icon': Icons.park_rounded},
-      {'label': 'Pantai', 'icon': Icons.beach_access_rounded},
-      {'label': 'Wisata Alam', 'icon': Icons.nature_people_rounded},
-      {'label': 'Museum', 'icon': Icons.museum_rounded},
-      {'label': 'Kuliner', 'icon': Icons.restaurant_rounded},
-      {'label': 'Mall', 'icon': Icons.shopping_basket},
-      {'label': 'Bioskop', 'icon': Icons.movie_rounded},
-      {'label': 'Waterpark', 'icon': Icons.water_rounded},
-      {'label': 'Olahraga', 'icon': Icons.sports_baseball_rounded},
-      {'label': 'Religi', 'icon': Icons.church_rounded},
-      {'label': 'Lainnya', 'icon': Icons.more_horiz_rounded},
+      {'label': 'Semua', 'icon': Icons.apps_rounded, 'value': null},
+      {'label': 'Taman', 'icon': Icons.park_rounded, 'value': 'Taman'},
+      {'label': 'Pantai', 'icon': Icons.beach_access_rounded, 'value': 'Pantai'},
+      {'label': 'Wisata Alam', 'icon': Icons.nature_people_rounded, 'value': 'Wisata Alam'},
+      {'label': 'Museum', 'icon': Icons.museum_rounded, 'value': 'Museum'},
+      {'label': 'Kuliner', 'icon': Icons.restaurant_rounded, 'value': 'Kuliner'},
+      {'label': 'Mall', 'icon': Icons.shopping_basket, 'value': 'Mall'},
+      {'label': 'Bioskop', 'icon': Icons.movie_rounded, 'value': 'Bioskop'},
+      {'label': 'Waterpark', 'icon': Icons.water_rounded, 'value': 'Waterpark'},
+      {'label': 'Olahraga', 'icon': Icons.sports_baseball_rounded, 'value': 'Olahraga'},
+      {'label': 'Religi', 'icon': Icons.church_rounded, 'value': 'Religi'},
     ];
     return SizedBox(
       height: 44,
@@ -379,10 +476,12 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: cats.length,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (_, i) {
-          final sel = i == 0;
+          final catValue = cats[i]['value'] as String?;
+          final sel = _selectedCategory == catValue;
           return ChoiceChip(
             selected: sel,
-            onSelected: (_) {},
+            showCheckmark: false,
+            onSelected: (_) => _filterByCategory(catValue),
             avatar: Icon(
               cats[i]['icon'] as IconData,
               size: 18,

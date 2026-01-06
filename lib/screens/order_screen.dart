@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/screens/root_navigator.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:teman_sejenak/screens/root_navigator.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 import '../models/guide.dart';
 import '../models/destination.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/screens/root_navigator.dart';
+import 'package:teman_sejenak/screens/root_navigator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
 

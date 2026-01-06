@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:teman_sejenak/services/api_service.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -183,16 +184,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             backgroundColor: AppColors.primary,
                           ),
                           onPressed: !_agree
-                              ? null
-                              : () {
-                                  if (_formKey.currentState!.validate()) {
+                            ? null
+                            : () async {
+                                if (_formKey.currentState!.validate()) {
+                                  
+                                  final res = await ApiService.register(
+                                    fullName: _nameCtrl.text,
+                                    placeOfBirth: _placeCtrl.text,
+                                    dateOfBirth: _birthCtrl.text,
+                                    email: _mailCtrl.text,
+                                    password: _passCtrl.text,
+                                  );
+
+                                  if (res["status"] == 201) {
+                                    // Success
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(res["message"])),
+                                    );
+
                                     Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const LoginScreen()));
+                                      context,
+                                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                                    );
+                                  } else {
+                                    // Error
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(res["message"])),
+                                    );
                                   }
-                                },
+                                }
+                              },
                           child: const Text(
                             'Daftar',
                             style: TextStyle(color: AppColors.background),

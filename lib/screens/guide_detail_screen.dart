@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_ins/utils/app_colors.dart';
+import 'package:teman_sejenak/utils/app_colors.dart';
 
 import '../models/guide.dart';
 import '../models/destination.dart'; // diperlukan untuk OrderScreen
@@ -135,6 +135,7 @@ class GuideDetailScreen extends StatelessWidget {
                     onPressed: () {
                       // Jika sudah punya Destination asli, kirimkan objeknya
                       final destDummy = Destination(
+                        id: 0,
                         title: g.location.split(',').first, // nama singkat
                         location: g.location,
                         description: 'Bertemu dengan ${g.name}',
