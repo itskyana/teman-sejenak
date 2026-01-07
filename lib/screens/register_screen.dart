@@ -18,6 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _mailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   bool _agree = false;
+  bool _obscurePassword = true;
 
   InputDecoration _dec(String label) => InputDecoration(
         labelText: label,
@@ -144,8 +145,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                       TextFormField(
                         controller: _passCtrl,
-                        obscureText: true,
-                        decoration: _dec('Password'),
+                        obscureText: _obscurePassword,
+                        decoration: _dec('Password').copyWith(
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_rounded
+                                  : Icons.visibility_rounded,
+                              color: AppColors.gray500,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                        ),
                         validator: (v) =>
                             v!.length < 6 ? 'Min 6 chars' : null,
                       ),

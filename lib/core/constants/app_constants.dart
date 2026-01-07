@@ -7,7 +7,7 @@ class AppConstants {
   static const String appVersion = '1.0.0';
 
   // API Configuration
-  static const String baseUrl = 'http://127.0.0.1/teman-sejenak/api';
+  static const String baseUrl = 'https://kyanaproject.live/teman-sejenak/api';
   
   // Timeouts
   static const Duration connectionTimeout = Duration(seconds: 30);

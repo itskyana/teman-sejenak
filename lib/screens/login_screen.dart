@@ -17,6 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _userCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   InputDecoration _dec(String label) => InputDecoration(
     labelText: label,
@@ -113,8 +114,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 20),
                       TextFormField(
                         controller: _passCtrl,
-                        obscureText: true,
-                        decoration: _dec('Masukkan Password Anda'),
+                        obscureText: _obscurePassword,
+                        decoration: _dec('Masukkan Password Anda').copyWith(
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_rounded
+                                  : Icons.visibility_rounded,
+                              color: AppColors.gray500,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                        ),
                         validator: (v) => v!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 10),

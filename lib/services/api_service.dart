@@ -3,7 +3,7 @@ import 'package:teman_sejenak/models/destination.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = "http://127.0.0.1/teman-sejenak/api";
+  static const String baseUrl = "https://kyanaproject.live/teman-sejenak/api";
 
   // REGISTER USER
   static Future<Map<String, dynamic>> register({
